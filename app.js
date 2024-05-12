@@ -12,7 +12,7 @@ app.post("/register", (req, res) => {
   let status = 200;
   let result;
   try {
-    validator(req.body);
+    validator(req.body, "register");
   } catch (error) {
     status = 401;
     result = error.message;
@@ -24,7 +24,7 @@ app.post("/login", (req, res) => {
   let status = 200;
   let result;
   try {
-    validator(req.body);
+    validator(req.body , "login");
     result = {
       token: "this is a jwt token",
     };
@@ -50,7 +50,7 @@ app.put("/preferences", authorizer, (req, res) => {
   let status = 200;
   let result;
   try {
-    validator(req.body);
+    validator(req.body, "preferences");
   } catch (error) {
     status = 401;
     result = error.message;
