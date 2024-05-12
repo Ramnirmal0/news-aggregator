@@ -6,6 +6,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const { validator } = require("./helper/helper");
+const { authorizer } = require("./middleware/authorizer");
 
 app.post("/register", (req, res) => {
   let status = 200;
@@ -24,6 +25,9 @@ app.post("/login", (req, res) => {
   let result;
   try {
     validator(req.body);
+    result = {
+      token: "this is a jwt token",
+    };
   } catch (error) {
     status = 401;
     result = error.message;
@@ -31,7 +35,7 @@ app.post("/login", (req, res) => {
   res.status(status).send(result);
 });
 
-app.get("/preferences", (req, res) => {
+app.get("/preferences", authorizer, (req, res) => {
   let status = 200;
   let result;
   try {
@@ -42,7 +46,7 @@ app.get("/preferences", (req, res) => {
   res.status(status).send(result);
 });
 
-app.put("/preferences", (req, res) => {
+app.put("/preferences", authorizer, (req, res) => {
   let status = 200;
   let result;
   try {
@@ -54,7 +58,7 @@ app.put("/preferences", (req, res) => {
   res.status(status).send(result);
 });
 
-app.get("/news", (req, res) => {
+app.get("/news", authorizer, (req, res) => {
   let status = 200;
   let result;
   try {
