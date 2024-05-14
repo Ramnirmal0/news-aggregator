@@ -13,12 +13,15 @@ class CustomDB {
   }
   findOne(email, preferences) {
     if (preferences) {
-      return this.#record[email][preferences];
+      return this.#record[email][preferences] || undefined;
     }
-    return this.#record[email];
+    return this.#record[email] || undefined;
   }
   updateOne(email, preferences) {
     return (this.#record(email)[preferences] = preferences);
+  }
+  printAll() {
+    console.log({ database: this.#record });
   }
 }
 
