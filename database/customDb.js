@@ -11,9 +11,9 @@ class CustomDB {
       preferences: data.preferences,
     });
   }
-  findOne(email, preferences) {
-    if (preferences) {
-      return this.#record[email][preferences] || undefined;
+  findOne(email, preference) {
+    if (preference) {
+      return this.#record[email].preferences || undefined;
     }
     return this.#record[email] || undefined;
   }
