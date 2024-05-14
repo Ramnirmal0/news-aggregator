@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken"); // Ensure you have jwt module required here
+const Joi = require("joi");
 
 const secretKey = process.env.SECRETkEY || "S@ltPepperZissorS";
 
@@ -11,24 +12,33 @@ const secretKey = process.env.SECRETkEY || "S@ltPepperZissorS";
  * @throws Will throw an error if the endpoint is invalid.
  */
 module.exports.validator = (body, endpoint) => {
-  switch (endpoint) {
-    case "register": {
-      // Validation logic for the "register" endpoint
-      break;
-    }
-    case "login": {
-      // Validation logic for the "login" endpoint
-      break;
-    }
-    case "preferences": {
-      // Validation logic for the "preferences" endpoint
-      break;
-    }
-    default: {
-      // Throw an error if the endpoint is not recognized
-      throw new Error("Invalid endpoint.");
-    }
+  const schemas = {
+    register: Joi.object({
+      name: Joi.string().min(3).max(50).required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().min(8).required(),
+      preferences: Joi.array().items(Joi.string()).required(),
+    }),
+    login: Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().min(8).required(),
+    }),
+    preferences: Joi.object({
+      preferences: Joi.array().items(Joi.string()).required(),
+    }),
+  };
+
+  const schema = schemas[endpoint];
+  if (!schema) {
+    throw new Error("Invalid endpoint.");
   }
+
+  const { error } = schema.validate(body);
+  if (error) {
+    throw new Error(`Validation error: ${error.details[0].message}`);
+  }
+  
+  return true;
 };
 
 /**
