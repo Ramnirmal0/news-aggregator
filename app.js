@@ -5,7 +5,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const { validator, hashPassword , passwordCheck } = require("./helper/helper");
+const { validator, hashPassword , passwordCheck , generateToken} = require("./helper/helper");
 const { authorizer } = require("./middleware/authorizer");
 const CustomDB = require("./database/customDb");
 const db = new CustomDB();
@@ -43,13 +43,13 @@ app.post("/login", async(req, res) => {
     if(!userInfo) throw new Error('Incorrect user email')
     await passwordCheck(req.body.password , userInfo.password)
     result = {
-      token: "this is a jwt token",
+      token: await generateToken(userInfo),
     };
   } catch (error) {
     status = 401;
     result = error.message;
   }
-  res.status(status).send({result});
+  res.status(status).send(result);
 });
 
 app.get("/preferences", authorizer, (req, res) => {
