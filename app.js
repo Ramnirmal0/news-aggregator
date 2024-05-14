@@ -68,7 +68,7 @@ app.get("/preferences", authorizer, (req, res) => {
     const token = req.headers.authorization;
     const userInfo = decoder(token.split(" ")[1]);
     result = {
-      preferences: userInfo.preferences,
+      preferences: db.findOne(userInfo.email, "Preference"),
     };
   } catch (error) {
     status = 401;
@@ -85,6 +85,7 @@ app.put("/preferences", authorizer, (req, res) => {
     const token = req.headers.authorization;
     const userInfo = decoder(token.split(" ")[1]);
     db.updateOne(userInfo.email, req.body.preferences);
+    db.printAll();
     result = { result: "preference updated for the user" };
   } catch (error) {
     status = 401;

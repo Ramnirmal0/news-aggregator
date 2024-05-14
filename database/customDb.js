@@ -21,7 +21,7 @@ class CustomDB {
     return this.#record[email].preferences = preferences;
   }
   printAll() {
-    console.log({ database: this.#record });
+    console.log({ database: JSON.stringify(this.#record) });
   }
 }
 
