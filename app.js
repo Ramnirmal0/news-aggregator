@@ -5,7 +5,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const { validator, hashPassword } = require("./helper/helper");
+const { validator, hashPassword , passwordCheck } = require("./helper/helper");
 const { authorizer } = require("./middleware/authorizer");
 const CustomDB = require("./database/customDb");
 const db = new CustomDB();
@@ -31,14 +31,17 @@ app.post("/register", async (req, res) => {
     status = 400;
     result = error.message;
   }
-  res.status(status).send(result);
+  res.status(status).send({result});
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", async(req, res) => {
   let status = 200;
   let result;
   try {
     validator(req.body, "login");
+    const userInfo = db.findOne(req.body.email)
+    if(!userInfo) throw new Error('Incorrect user email')
+    await passwordCheck(req.body.password , userInfo.password)
     result = {
       token: "this is a jwt token",
     };
@@ -46,7 +49,7 @@ app.post("/login", (req, res) => {
     status = 401;
     result = error.message;
   }
-  res.status(status).send(result);
+  res.status(status).send({result});
 });
 
 app.get("/preferences", authorizer, (req, res) => {
@@ -57,7 +60,7 @@ app.get("/preferences", authorizer, (req, res) => {
     status = 401;
     result = error.message;
   }
-  res.status(status).send(result);
+  res.status(status).send({result});
 });
 
 app.put("/preferences", authorizer, (req, res) => {
@@ -69,7 +72,7 @@ app.put("/preferences", authorizer, (req, res) => {
     status = 401;
     result = error.message;
   }
-  res.status(status).send(result);
+  res.status(status).send({result});
 });
 
 app.get("/news", authorizer, (req, res) => {
@@ -80,7 +83,7 @@ app.get("/news", authorizer, (req, res) => {
     status = 401;
     result = error.message;
   }
-  res.status(status).send(result);
+  res.status(status).send({result});
 });
 
 app.listen(port, (err) => {
