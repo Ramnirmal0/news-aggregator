@@ -15,6 +15,9 @@ const {
 const { authorizer } = require("./middleware/authorizer");
 const CustomDB = require("./database/customDb");
 const db = new CustomDB();
+const newsEndpoint =
+  process.env.newsEndpoint ||
+  "https://6643dc086c6a656587088a3a.mockapi.io/news/category?category=";
 
 app.post("/register", async (req, res) => {
   let status = 200;
@@ -32,7 +35,7 @@ app.post("/register", async (req, res) => {
     if (exist) throw new Error("User already exist");
     db.insertOne(payload);
     db.printAll();
-    result = { result : "User registered successfully"};
+    result = { result: "User registered successfully" };
   } catch (error) {
     status = 400;
     result = error.message;
@@ -65,8 +68,8 @@ app.get("/preferences", authorizer, (req, res) => {
     const token = req.headers.authorization;
     const userInfo = decoder(token.split(" ")[1]);
     result = {
-      preferences: userInfo.preferences
-    }
+      preferences: userInfo.preferences,
+    };
   } catch (error) {
     status = 401;
     result = error.message;
@@ -79,11 +82,15 @@ app.put("/preferences", authorizer, (req, res) => {
   let result;
   try {
     validator(req.body, "preferences");
+    const token = req.headers.authorization;
+    const userInfo = decoder(token.split(" ")[1]);
+    db.updateOne(userInfo.email, req.body.preferences);
+    result = { result: "preference updated for the user" };
   } catch (error) {
     status = 401;
     result = error.message;
   }
-  res.status(status).send({ result });
+  res.status(status).send(result);
 });
 
 app.get("/news", authorizer, (req, res) => {
