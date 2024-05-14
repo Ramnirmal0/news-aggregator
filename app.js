@@ -7,14 +7,18 @@ app.use(express.urlencoded({ extended: true }));
 
 const { validator } = require("./helper/helper");
 const { authorizer } = require("./middleware/authorizer");
+const CustomDB = require('./database/customDb')
+const db = new CustomDB();
 
 app.post("/register", (req, res) => {
   let status = 200;
   let result;
   try {
     validator(req.body, "register");
+    db.insertOne(req.body);
+    result = "User registered successfully";
   } catch (error) {
-    status = 401;
+    status = 400;
     result = error.message;
   }
   res.status(status).send(result);
