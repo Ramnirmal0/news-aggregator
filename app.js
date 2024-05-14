@@ -10,20 +10,22 @@ const { authorizer } = require("./middleware/authorizer");
 const CustomDB = require("./database/customDb");
 const db = new CustomDB();
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   let status = 200;
   let result;
   try {
-    const body = JSON.parse(req.body);
+    const body = req.body;
     validator(body, "register");
     const payload = {
       name: body.name,
       email: body.email,
-      password: hashPassword(body.password),
+      password: await hashPassword(body.password),
       preferences: body.preferences,
     };
+    const exist = db.findOne(body.email);
+    if (exist) throw new Error("User already exist");
     db.insertOne(payload);
-    db.printAll()
+    db.printAll();
     result = "User registered successfully";
   } catch (error) {
     status = 400;
