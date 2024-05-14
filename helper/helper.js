@@ -18,3 +18,7 @@ module.exports.validator = (body, endpoint) => {
 module.exports.decoder = token = {
     
 };
+
+module.exports.generateToken = (Credential) =>{
+  
+}
