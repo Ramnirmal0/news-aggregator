@@ -1,4 +1,4 @@
-class User {
+class CustomDB {
   #record;
   constructor() {
     this.#record = {};
@@ -21,3 +21,5 @@ class User {
     return (this.#record(email)[preferences] = preferences);
   }
 }
+
+module.exports = CustomDB;
