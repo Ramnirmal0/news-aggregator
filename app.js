@@ -5,17 +5,25 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const { validator } = require("./helper/helper");
+const { validator, hashPassword } = require("./helper/helper");
 const { authorizer } = require("./middleware/authorizer");
-const CustomDB = require('./database/customDb')
+const CustomDB = require("./database/customDb");
 const db = new CustomDB();
 
 app.post("/register", (req, res) => {
   let status = 200;
   let result;
   try {
-    validator(req.body, "register");
-    db.insertOne(req.body);
+    const body = JSON.parse(req.body);
+    validator(body, "register");
+    const payload = {
+      name: body.name,
+      email: body.email,
+      password: hashPassword(body.password),
+      preferences: body.preferences,
+    };
+    db.insertOne(payload);
+    db.printAll()
     result = "User registered successfully";
   } catch (error) {
     status = 400;
@@ -28,7 +36,7 @@ app.post("/login", (req, res) => {
   let status = 200;
   let result;
   try {
-    validator(req.body , "login");
+    validator(req.body, "login");
     result = {
       token: "this is a jwt token",
     };

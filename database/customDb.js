@@ -20,6 +20,9 @@ class CustomDB {
   updateOne(email, preferences) {
     return (this.#record(email)[preferences] = preferences);
   }
+  printAll() {
+    console.log({ database: this.#record });
+  }
 }
 
 module.exports = CustomDB;
