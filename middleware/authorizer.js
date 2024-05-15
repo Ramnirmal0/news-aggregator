@@ -5,7 +5,7 @@ module.exports.authorizer = (req, res, next) => {
 
   // Check if the token is present and formatted correctly
   if (!bearerToken || !bearerToken.startsWith("Bearer ")) {
-    throw new Error("Unauthorized: Bearer token missing or invalid");
+    return res.send(401).status("Unauthorized: Bearer token missing or invalid")
   }
 
   // Extract the token value (removing 'Bearer ' prefix)
@@ -13,7 +13,7 @@ module.exports.authorizer = (req, res, next) => {
 
   // Validate the token using your decoder function
   if (!decoder(token)) {
-    throw new Error("Unauthorized: Invalid token");
+    return res.send(401).status("Unauthorized: Invalid token")
   }
 
   // If token is valid, proceed to the next middleware

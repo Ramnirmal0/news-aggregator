@@ -121,19 +121,22 @@ module.exports.generateToken = (user) => {
 };
 
 module.exports.fetchNews = async (category) => {
-  let result = [];
-  if (category.length === 0) {
+  if (!Array.isArray(category) || category.length === 0) {
     throw new Error("No preference selected for this user");
   }
-  await category.map(async (genre) => {
-    await axios
-      .get(`${newsEndpoint}&category=${genre}`)
-      .then((response) => {
-        result.push(response.articles);
-      })
-      .catch((error) => {
-        throw new Error("Error in connecting to news server");
-      });
-  });
-  return result.flat(Infinity);
+
+  try {
+    const promises = category.map((genre) => {
+      return axios.get(`${newsEndpoint}&category=${genre}`)
+        .then(response => response.data.articles)
+        .catch(error => {
+          throw new Error("Error in connecting to news server");
+        });
+    });
+
+    const results = await Promise.all(promises);
+    return results.flat(Infinity);
+  } catch (error) {
+    throw new Error("Error in fetching news");
+  }
 };
