@@ -14,9 +14,9 @@ const {
   fetchNews,
 } = require("./helper/helper");
 const { authorizer } = require("./middleware/authorizer");
-const CustomDB = require("./database/customDb");
+const DBClient = require("./database/DBClient");
 
-const db = new CustomDB();
+const db = new DBClient();
 
 app.post("/register", async (req, res) => {
   let status = 200;

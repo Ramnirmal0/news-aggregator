@@ -1,4 +1,4 @@
-class CustomDB {
+class DBClient {
   #record;
   constructor() {
     this.#record = {};
@@ -25,4 +25,4 @@ class CustomDB {
   }
 }
 
-module.exports = CustomDB;
+module.exports = DBClient;
