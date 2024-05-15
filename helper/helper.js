@@ -1,8 +1,12 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken"); // Ensure you have jwt module required here
 const Joi = require("joi");
+const axios = require("axios");
 
 const secretKey = process.env.SECRETkEY || "S@ltPepperZissorS";
+const newsEndpoint =
+  process.env.newsEndpoint ||
+  "https://newsapi.org/v2/top-headlines?country=us&apiKey=777d1c38814b4718a7f6cb90121aa230";
 
 /**
  * Validates request body based on the endpoint.
@@ -37,7 +41,7 @@ module.exports.validator = (body, endpoint) => {
   if (error) {
     throw new Error(`Validation error: ${error.details[0].message}`);
   }
-  
+
   return true;
 };
 
@@ -114,4 +118,22 @@ module.exports.generateToken = (user) => {
   const token = jwt.sign(userWithoutPassword, secretKey, { expiresIn: "1h" });
 
   return token; // Return the generated token
+};
+
+module.exports.fetchNews = async (category) => {
+  let result = [];
+  if (category.length === 0) {
+    throw new Error("No preference selected for this user");
+  }
+  await category.map(async (genre) => {
+    await axios
+      .get(`${newsEndpoint}&category=${genre}`)
+      .then((response) => {
+        result.push(response.articles);
+      })
+      .catch((error) => {
+        throw new Error("Error in connecting to news server");
+      });
+  });
+  return result.flat(Infinity);
 };

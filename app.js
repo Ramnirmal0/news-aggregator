@@ -11,13 +11,12 @@ const {
   passwordCheck,
   generateToken,
   decoder,
+  fetchNews,
 } = require("./helper/helper");
 const { authorizer } = require("./middleware/authorizer");
 const CustomDB = require("./database/customDb");
+
 const db = new CustomDB();
-const newsEndpoint =
-  process.env.newsEndpoint ||
-  "https://6643dc086c6a656587088a3a.mockapi.io/news/category?category=";
 
 app.post("/register", async (req, res) => {
   let status = 200;
@@ -94,15 +93,19 @@ app.put("/preferences", authorizer, (req, res) => {
   res.status(status).send(result);
 });
 
-app.get("/news", authorizer, (req, res) => {
+app.get("/news", authorizer, async (req, res) => {
   let status = 200;
   let result;
   try {
+    const token = req.headers.authorization;
+    const userInfo = decoder(token.split(" ")[1]);
+    const preferences = db.findOne(userInfo.email, "Preference");
+    result = { news: await fetchNews(preferences) };
   } catch (error) {
     status = 401;
     result = error.message;
   }
-  res.status(status).send({ result });
+  res.status(status).send(result);
 });
 
 app.listen(port, (err) => {
