@@ -16,6 +16,7 @@ const newsEndpoint =
  * @throws Will throw an error if the endpoint is invalid.
  */
 module.exports.validator = (body, endpoint) => {
+  // Define Joi schemas for different endpoints
   const schemas = {
     register: Joi.object({
       name: Joi.string().min(3).max(50).required(),
@@ -32,17 +33,21 @@ module.exports.validator = (body, endpoint) => {
     }),
   };
 
+  // Get the schema for the specified endpoint
   const schema = schemas[endpoint];
   if (!schema) {
+    // Throw an error if the endpoint is invalid
     throw new Error("Invalid endpoint.");
   }
 
+  // Validate the request body against the schema
   const { error } = schema.validate(body);
   if (error) {
+    // Throw an error if validation fails
     throw new Error(`Validation error: ${error.details[0].message}`);
   }
 
-  return true;
+  return true; // Return true if validation is successful
 };
 
 /**
@@ -120,23 +125,36 @@ module.exports.generateToken = (user) => {
   return token; // Return the generated token
 };
 
+/**
+ * Fetches news articles based on user preferences.
+ *
+ * @param {Array<string>} category - The categories to fetch news for.
+ * @returns {Promise<Array<Object>>} - The fetched news articles.
+ * @throws Will throw an error if the categories are invalid or if fetching fails.
+ */
 module.exports.fetchNews = async (category) => {
   if (!Array.isArray(category) || category.length === 0) {
+    // Throw an error if no preference is selected
     throw new Error("No preference selected for this user");
   }
 
   try {
+    // Create an array of promises to fetch news for each category
     const promises = category.map((genre) => {
-      return axios.get(`${newsEndpoint}&category=${genre}`)
-        .then(response => response.data.articles)
-        .catch(error => {
+      return axios
+        .get(`${newsEndpoint}&category=${genre}`)
+        .then((response) => response.data.articles)
+        .catch((error) => {
+          // Throw an error if the request to the news server fails
           throw new Error("Error in connecting to news server");
         });
     });
 
+    // Wait for all promises to resolve and flatten the results
     const results = await Promise.all(promises);
     return results.flat(Infinity);
   } catch (error) {
+    // Throw an error if fetching news fails
     throw new Error("Error in fetching news");
   }
 };
