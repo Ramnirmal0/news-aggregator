@@ -86,3 +86,263 @@ The following environment variables need to be set:
 
 - `newsEndpoint`: URL for the news API endpoint.
 
+## Endpoints
+
+
+
+Authorization Bearer Token
+
+#### POST register
+
+[Open request](https://desktop.postman.com/?desktopVersion=11.1.0&userId=34703374&teamId=0&region=us)
+
+http://localhost:3000/users/signup
+
+ 
+
+Bodyraw (json)
+
+json
+
+```
+{
+    "name":"Ebony",
+    "email":"username@email.com",
+    "password":"-------",
+    "preferences":[
+        "movies",
+        "comics"]
+}
+```
+
+Example
+
+register
+
+Request
+
+cURL
+
+```
+curl --location 'http://localhost:3000/users/signup'\
+--data-raw '{
+    "name":"Emerson",
+    "email":"username@email.com",
+    "password":"-------",
+    "preferences":[
+        "movies",
+        "comics"]
+}'
+```
+
+200 OK
+
+Response
+
+-   Body
+-   Headers (7)
+
+json
+
+```
+{
+    "result": "User registered successfully"
+}
+```
+
+#### POST login
+
+[Open request](https://desktop.postman.com/?desktopVersion=11.1.0&userId=34703374&teamId=0&region=us)
+
+http://localhost:3000/users/login
+
+ 
+
+Bodyraw (json)
+
+json
+
+```
+{
+    "email": "username@email.com",
+    "password": "-------"
+}
+```
+
+Example
+
+login
+
+Request
+
+cURL
+
+```
+curl --location 'http://localhost:3000/users/login'\
+--data-raw '{
+    "email": "username@email.com",
+    "password": "-------"
+}'
+```
+
+200 OK
+
+Response
+
+-   Body
+-   Headers (7)
+
+View More
+
+json
+
+```
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiRGVzbW9uZCIsImVtYWlsIjoidXNlcm5hbWVAZW1haWwuY29tIiwicHJlZmVyZW5jZXMiOlsibW92aWVzIiwiY29taWNzIl0sImlhdCI6MTcxNTc4OTg0MSwiZXhwIjoxNzE1NzkzNDQxfQ.mdITgZx4IKH080xwzOFqQS28_G4TiKicUhsp9MxmRiE"
+}
+```
+
+#### GET preferences
+
+[Open request](https://desktop.postman.com/?desktopVersion=11.1.0&userId=34703374&teamId=0&region=us)
+
+http://localhost:3000/users/preferences
+
+ 
+
+AuthorizationBearer Token
+
+This request is using an authorization helper from collection Project-2 New Aggregator API
+
+Example
+
+preferences
+
+Request
+
+cURL
+
+```
+curl --location 'http://localhost:3000/users/preferences'
+```
+
+200 OK
+
+Response
+
+-   Body
+-   Headers (7)
+
+json
+
+```
+{
+    "preferences": [
+        "movies",
+        "comics"
+    ]
+}
+```
+
+#### PUT preferences
+
+[Open request](https://desktop.postman.com/?desktopVersion=11.1.0&userId=34703374&teamId=0&region=us)
+
+http://localhost:3000/users/preferences
+
+ 
+
+AuthorizationBearer Token
+
+This request is using an authorization helper from collection Project-2 New Aggregator API
+
+Bodyraw (json)
+
+json
+
+```
+{
+    "preferences": ["music", "business", "games"]
+}
+```
+
+Example
+
+preferences
+
+Request
+
+cURL
+
+```
+curl --location --request PUT 'http://localhost:3000/users/preferences'\
+--data '{
+    "preferences": ["music", "business", "games"]
+}'
+```
+
+200 OK
+
+Response
+
+-   Body
+-   Headers (7)
+
+json
+
+```
+{
+    "result": "Preference updated for the user"
+}
+```
+
+#### GET news
+
+[Open request](https://desktop.postman.com/?desktopVersion=11.1.0&userId=34703374&teamId=0&region=us)
+
+http://localhost:3000/news
+
+ 
+
+AuthorizationBearer Token
+
+This request is using an authorization helper from collection Project-2 New Aggregator API
+
+Example
+
+news
+
+Request
+
+cURL
+
+```
+curl --location 'http://localhost:3000/news'
+```
+
+200 OK
+
+Response
+
+-   Body
+-   Headers (7)
+
+View More
+
+json
+
+```
+{
+    "news": [
+        {
+            "source": {
+                "id": null,
+                "name": "Eonline.com"
+            },
+            "author": "Olivia Evans",
+            "title": "Zayn Malik Reveals His Relationship Status After Gigi Hadid Breakup---And Getting Kicked Off Tinder - E! NEWS",
+            "description": "Zayn Malik detailed his breakups with Gigi Hadid---with whom he shares 3-year-old daughter Khai---and Little Mix's Perrie Edwards, as well as his current relationship status.",
+            "url": "https://www.eonline.com/news/1401554/zayn-malik-reveals-his-relationship-status-after-gigi-hadid-breakup-and-getting-kicked-off-tinder",
+            "urlToImage": "https://akns-images.eonline.com/eol_images/Entire_Site/2024414/rs_1200x1200-240514071413-zayn.jpg?fit=around%7C1080:1080&output-quality=90&crop=1080:1080;center,top",
+
+```
