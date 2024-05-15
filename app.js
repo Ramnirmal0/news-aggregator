@@ -18,7 +18,7 @@ const DBClient = require("./database/DBClient");
 
 const db = new DBClient();
 
-app.post("/register", async (req, res) => {
+app.post("/users/signup", async (req, res) => {
   let status = 200;
   let result;
   try {
@@ -41,7 +41,7 @@ app.post("/register", async (req, res) => {
   res.status(status).send(result);
 });
 
-app.post("/login", async (req, res) => {
+app.post("/users/login", async (req, res) => {
   let status = 200;
   let result;
   try {
@@ -59,7 +59,7 @@ app.post("/login", async (req, res) => {
   res.status(status).send(result);
 });
 
-app.get("/preferences", authorizer, (req, res) => {
+app.get("/users/preferences", authorizer, (req, res) => {
   let status = 200;
   let result;
   try {
@@ -75,7 +75,7 @@ app.get("/preferences", authorizer, (req, res) => {
   res.status(status).send(result);
 });
 
-app.put("/preferences", authorizer, (req, res) => {
+app.put("/users/preferences", authorizer, (req, res) => {
   let status = 200;
   let result;
   try {
