@@ -33,7 +33,6 @@ app.post("/register", async (req, res) => {
     const exist = db.findOne(body.email);
     if (exist) throw new Error("User already exist");
     db.insertOne(payload);
-    db.printAll();
     result = { result: "User registered successfully" };
   } catch (error) {
     status = 400;
@@ -84,7 +83,6 @@ app.put("/preferences", authorizer, (req, res) => {
     const token = req.headers.authorization;
     const userInfo = decoder(token.split(" ")[1]);
     db.updateOne(userInfo.email, req.body.preferences);
-    db.printAll();
     result = { result: "preference updated for the user" };
   } catch (error) {
     status = 401;

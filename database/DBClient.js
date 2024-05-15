@@ -20,9 +20,6 @@ class DBClient {
   updateOne(email, preferences) {
     return this.#record[email].preferences = preferences;
   }
-  printAll() {
-    console.log({ database: JSON.stringify(this.#record) });
-  }
 }
 
 module.exports = DBClient;
